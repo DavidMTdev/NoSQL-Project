@@ -46,8 +46,8 @@ def getCompanies():
     return jsonify(companyJson)
 
 
-# http://127.0.0.1:5003/api/company/filter?id=2
-# http://127.0.0.1:5003/api/company/filter?name=Walt%20Disney%20Pictures
+# http://127.0.0.1:5000/api/company/filter?id=2
+# http://127.0.0.1:5000/api/company/filter?name=Walt%20Disney%20Pictures
 @company.route("/filter", methods=['GET'])
 def getCompanie():
     """   returns [jsonify] : companyJson   """
@@ -82,7 +82,7 @@ def getCompanie():
     return jsonify(companyJson)
 
 
-# http://127.0.0.1:5003/api/company/origin?country=US&page=1
+# http://127.0.0.1:5000/api/company/origin?country=US&page=1
 @company.route("/origin", methods=['GET'])
 def getCompanieByOrigin():
     """   returns [jsonify] : companyJson   """
@@ -115,3 +115,41 @@ def getCompanieByOrigin():
         companyJson["message"] = "No data could be retrieved"
 
     return jsonify(companyJson)
+
+# http://127.0.0.1:5000/api/company/create
+@company.route("/create",  methods=['POST'])
+def postCreateCompany():
+    req = request.json
+    if req :
+        db.companies.insert_one(req)
+
+        message = {
+            "success": True,
+            "message": "company was created"
+        }
+    else :
+        message = {
+            "success": False,
+            "message": "The company wasn't created"
+        }
+
+    return jsonify(message)
+
+
+# http://127.0.0.1:5000/api/company/delete/100000
+@company.route("/delete/<id>",  methods=['DELETE'])
+def postDeleteCompany(id):
+    if db.companies.find_one({"id": int(id)}):
+        db.companies.delete_one({"id": int(id)})
+
+        message = {
+            "success": True,
+            "message": "company was deleted"
+        }
+    else :
+        message = {
+            "success": False,
+            "message": "The company wasn't deleted"
+        }
+
+    return jsonify(message)

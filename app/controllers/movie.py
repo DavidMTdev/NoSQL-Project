@@ -41,7 +41,12 @@ def getMovie(id):
     match = { "$match": { "id": int(id) }}
     movie = db.movies.aggregate([match, joinGenres, joinCompanies, addFields, project])
 
-    return jsonify(list(movie)[0])
+    message = {
+        "success": True,
+        "result": list(movie)
+    }
+
+    return jsonify(message)
 
 # http://localhost:5000/api/movie/all
 @movie.route("/all")
@@ -310,3 +315,38 @@ def getMovieByDate():
     data["count"] = len(data["results"])
 
     return jsonify(data)
+
+@movie.route("/create",  methods=['POST'])
+def postCreateMovie():
+    req = request.json
+
+    if req != None:
+        db.movies.insert_one(request.json)
+        message = {
+            "success": True,
+            "message": "The movie was created "
+        }
+    else:
+       message = {
+            "success": False,
+            "message": "The movie wasn't created "
+        } 
+
+    return jsonify(message)
+
+@movie.route("/delete/<id>",  methods=['DELETE'])
+def deleteCreateMovie(id):
+    if db.movies.find_one({"id": int(id)}):
+        db.movies.delete_one({"id": int(id)})
+    
+        message = {
+            "success": True,
+            "message": "The movie was deleted "
+        }
+    else:
+       message = {
+            "success": False,
+            "message": "The movie wasn't deleted "
+        } 
+
+    return jsonify(message)
