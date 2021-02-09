@@ -167,6 +167,7 @@ def getMovieByCompany(id):
 
     return jsonify(moviesArray)
 
+# http://127.0.0.1:5000/api/movie/genre/14?page=1
 @movie.route("/genre/<id>")
 def getMovieByGenre(id):
     page = request.args.get('page')
@@ -189,6 +190,7 @@ def getMovieByGenre(id):
 
     return jsonify(data)
 
+# http://127.0.0.1:5000/api/movie/language/US?page=1
 @movie.route("/language/<originalLanguage>")
 def getMovieByLanguage(originalLanguage):
     page = request.args.get('page')
@@ -257,38 +259,6 @@ def getMovieClassedByRuntime():
 
     return jsonify(data)
 
-# http://127.0.0.1:5000/api/movie/revenue/company?page=1
-# @movie.route("/revenue/company")
-# def getMovieByCompanyRevenue():
-#     page = request.args.get('page')
-
-#     project = { 
-#     "$project": {
-#         "_id": 1,
-#         "genres._id" : 0,
-#         "production_companies._id": 0
-#     }
-# }
-
-#     moyenne = {"$group" : {"_id": "$production_companies.id" , "revenue" : { "$avg" : "$revenue" }} }
-#     limit = {"$limit": 20}
-#     skip = {"$skip": 20 * (int(page) - 1)}
-#     sort = {"$sort": {"revenue": -1}} 
-#     movies = db.movies.aggregate([moyenne, joinCompanies, addFields, project, skip, limit, sort])
-    
-#     data = {
-#         "results": [],
-#         "page" : page,
-#         "count": 0
-#     }
-    
-#     for movie in movies: 
-#         data["results"].append(movie)
-        
-#     data["count"] = len(data["results"])
-
-#     return jsonify(data)
-
 # http://127.0.0.1:5000/api/movie/date?page=1&year=1995
 @movie.route("/date")
 def getMovieByDate():
@@ -316,6 +286,7 @@ def getMovieByDate():
 
     return jsonify(data)
 
+# http://127.0.0.1:5000/api/movie/create
 @movie.route("/create",  methods=['POST'])
 def postCreateMovie():
     req = request.json
@@ -334,6 +305,7 @@ def postCreateMovie():
 
     return jsonify(message)
 
+# http://127.0.0.1:5000/api/movie/delete/100200
 @movie.route("/delete/<id>",  methods=['DELETE'])
 def deleteCreateMovie(id):
     if db.movies.find_one({"id": int(id)}):
