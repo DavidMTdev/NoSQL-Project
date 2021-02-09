@@ -1,5 +1,6 @@
 # Folder
 env
+venv
 __pycache__
 
 # File
